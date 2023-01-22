@@ -40,7 +40,7 @@ export default function EnterancePage() {
           )}
         </p>
         <p>
-          {isValidMembership && typeof membrshipExpireDate === 'string' && (
+          {isValidMembership && typeof membrshipExpireDate !== 'boolean' && (
             <>
               <p>
                 You are already active member until {new Date(membrshipExpireDate).toUTCString()}
