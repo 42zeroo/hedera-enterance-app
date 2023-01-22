@@ -11,7 +11,7 @@ import Button from '../shared/Button'
 export default function NavbarComponent() {
   const { connectionState, pairingData, disconnect, connect } = useHashConnectContext()
   const tokenDataFetchMethod = useCallback(async () => (
-    await MirrorNode.fetchTokenInfo(MEBERSHIP_TOKEN_ID)
+    MEBERSHIP_TOKEN_ID ? await MirrorNode.fetchTokenInfo(MEBERSHIP_TOKEN_ID) : null
   ), [])
   const [ tokenData ] = useFetch(tokenDataFetchMethod)
 
@@ -45,8 +45,8 @@ export default function NavbarComponent() {
         <span className="self-center text-xl ml-4 font-semibold whitespace-nowrap text-white">
           dAap GYM
         </span>
-        <div className="w-full block w-auto mt-4 md:mt-0" id="navbar-default">
-          <ul className="flex flex-col sm:flex-row p-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 mt-0 text-sm font-medium border-0 bg-gray-900 border-gray-700">
+        <div className="block w-auto mt-4 md:mt-0" id="navbar-default">
+          <ul className="flex flex-col sm:flex-row p-4 border-gray-100 rounded-lg bg-gray-50 md:space-x-8 mt-0 text-sm font-medium border-0 bg-gray-900 border-gray-700">
             <li className='flex items-center px-4 justify-center sm:justify-start'>
               <Link className='block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent' href='/'>Home</Link>
             </li>

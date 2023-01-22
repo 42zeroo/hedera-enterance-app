@@ -15,7 +15,7 @@ export default function EnterancePage() {
   const [isValidMembership, membrshipExpireDate, isValidMembershipLoading] = useValidMembershipChecker(pairingData?.accountIds[0], MEBERSHIP_TOKEN_ID)
   
   const tokenDataFetchMethod = useCallback(async () => (
-    await MirrorNode.fetchTokenInfo(MEBERSHIP_TOKEN_ID)
+    MEBERSHIP_TOKEN_ID ? await MirrorNode.fetchTokenInfo(MEBERSHIP_TOKEN_ID) : null
   ), [])
   
   const [ tokenData, , tokenDataLoading ] = useFetch(tokenDataFetchMethod)
