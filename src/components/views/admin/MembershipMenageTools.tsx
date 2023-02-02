@@ -39,7 +39,7 @@ const MembershipMenageTools = ({
       
       const mintTransaction = HTS.burnToken(membershipTokenInfo?.token_id, userWalletId, serialsToRemove)
 
-      const tokenMintResponse = await sendTransaction(mintTransaction, false);
+      const tokenMintResponse = await sendTransaction(mintTransaction);
 
       if (!tokenMintResponse) {
         throw new Error('Token mint failed.');
@@ -77,7 +77,7 @@ const MembershipMenageTools = ({
       
       const mintTransaction = HTS.mintToken(membershipTokenInfo?.token_id, userWalletId, metaCIDs)
       
-      const tokenMintResponse = await sendTransaction(mintTransaction, false);
+      const tokenMintResponse = await sendTransaction(mintTransaction);
 
       if (!tokenMintResponse) {
         throw new Error('Token mint failed.');

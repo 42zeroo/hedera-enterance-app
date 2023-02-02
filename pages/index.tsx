@@ -49,7 +49,7 @@ export default function Home() {
         const approvalTx = HTS.tokenAssociate(pairingData?.accountIds[0], MEMBERSHIP_TOKEN_ID)
         
         const approvalSignedTransaction = await signer.signTransaction(approvalTx)
-        await sendTransaction(approvalSignedTransaction, true)
+        await sendTransaction(approvalSignedTransaction, false)
       }
 
       const buyTransaction = HTS.sendNFT(pairingData.accountIds[0], {
@@ -79,7 +79,7 @@ export default function Home() {
 
       const signed = Transaction.fromBytes(Uint8Array.from(Object.values(txBytes.data)))
 
-      const buyResponse = await sendTransaction(signed, false);
+      const buyResponse = await sendTransaction(signed);
 
       if (!buyResponse) {
         throw new Error('Token mint failed.');

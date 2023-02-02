@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useState } from "react"
-import { Transaction, TransactionReceipt, TransactionResponse } from "@hashgraph/sdk";
+import { ContractCallQuery, Query, Transaction, TransactionReceipt, TransactionResponse } from "@hashgraph/sdk";
 import { HashConnect, HashConnectTypes, MessageTypes } from "hashconnect";
 import { HashConnectConnectionState } from "hashconnect/dist/esm/types";
 import last from "lodash/last";
@@ -20,7 +20,7 @@ interface HashConnectContextProps {
   hashConnect: HashConnect
   connect: () => Promise<void>
   disconnect: () => Promise<void>
-  sendTransaction: (tx: Transaction, sign?: boolean) => Promise<TransactionReceipt | null>
+  sendTransaction: (tx: Transaction | ContractCallQuery, signWithHashPack?: boolean) => Promise<TransactionReceipt | null>
 }
 
 export const HashConnectContext = createContext<HashConnectContextProps>({
@@ -88,9 +88,13 @@ const useHashConnect = () => {
     }
   }, [pairingData?.topic])
 
-  const sendTransaction = useCallback(async (tx: Transaction, sign = false) => {
+  const sendTransaction = useCallback(async (tx: Transaction | ContractCallQuery, signWithHashPack = true) => {
     if (!pairingData) {
       throw new Error('Loading logged Hedera account id Error.');
+    }
+
+    if (!signWithHashPack && tx instanceof ContractCallQuery) {
+      throw new Error('You have to sign ContractCallQuery with HashPack!')
     }
 
     let response:
@@ -114,11 +118,11 @@ const useHashConnect = () => {
         },
       }})
 
-    hashConnectTxBytes = sign ? (
-      SigningService.makeBytes(tx, pairingData.accountIds[0])
-    ) : (
-      tx.toBytes()
-    );
+      hashConnectTxBytes = !signWithHashPack && tx instanceof Transaction ? (
+        SigningService.makeBytes(tx, pairingData.accountIds[0])
+      ) : (
+        await tx.toBytes()
+      );
 
 
     response = await hashConnect?.sendTransaction(
@@ -134,6 +138,7 @@ const useHashConnect = () => {
     );
 
     if (response?.receipt) {
+      console.log({response})
       return TransactionReceipt.fromBytes(
         response.receipt as Uint8Array
       );
